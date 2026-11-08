@@ -1,8 +1,7 @@
-// Model: all data + the functions that change it. No DOM, no view imports.
+import { PRODUCTS, RATE, UNITS } from './data.js';
 const KEY = 'netzone-state-v2';
-const RATE = { regular: 20, vip: 35 }; // pesos per hour
 
-export const state = { nextId: 100, users: [], units: [], waitlist: [], pending: [], updates: [] };
+export const state = { nextId: 100, users: [], units: [], pending: [], updates: [], orders: [] };
 
 const newId = () => state.nextId++;
 const persist = () => localStorage.setItem(KEY, JSON.stringify(state));
@@ -10,16 +9,10 @@ const persist = () => localStorage.setItem(KEY, JSON.stringify(state));
 const seed = () => {
   state.users = [
     { id: 1, username: 'admin', password: 'admin123', role: 'admin', balance: 0 },
-    { id: 2, username: 'juan', password: '1234', role: 'player', balance: 120 },
   ];
-  state.units = [1, 2, 3, 4, 5, 6].map(id => ({
-    id, name: `Unit ${id}`, type: id <= 4 ? 'regular' : 'vip', broken: id === 6, player: null, startedAt: null, paid: 0,
+  state.units = UNITS.map((u, i) => ({
+    id: i + 1, name: u.name, type: u.type, player: null, startedAt: null, paid: 0,
   }));
-  Object.assign(state.units[1], { player: 'Ana', startedAt: Date.now() - 45 * 60000, paid: 40 });
-  state.updates = [
-    { id: 3, kind: 'Tournament', title: 'Rules of Survival Tournament', date: '2026-11-28', link: 'https://example.com/register', details: 'Battle for your life! Register using the form link.' },
-    { id: 4, kind: 'Raffle', title: 'Top-up raffle ticket', date: '', link: '', details: 'Top up ₱100 or more and get one raffle ticket.' },
-  ];
 };
 
 export const init = () => {
@@ -28,12 +21,12 @@ export const init = () => {
   else { seed(); persist(); }
 };
 
-// ---------- helpers ----------
+
 let currentId = Number(sessionStorage.getItem('netzone-user')) || null; // per browser tab
 const setCurrent = id => (id ? sessionStorage.setItem('netzone-user', id) : sessionStorage.removeItem('netzone-user'), (currentId = id));
 export const currentUser = () => state.users.find(u => u.id === currentId) ?? null;
 
-// Another tab (e.g. a shop PC) changed the data: pull it in.
+
 export const reload = key => {
   if (key !== KEY) return false;
   Object.assign(state, JSON.parse(localStorage.getItem(KEY)));
@@ -53,17 +46,16 @@ const minutesPlayed = unit => Math.floor((Date.now() - unit.startedAt) / 60000);
 const sessionValue = unit => Math.max(0, unit.paid - ((Date.now() - unit.startedAt) / 3600000) * RATE[unit.type]);
 const minutesLeft = unit => Math.floor((sessionValue(unit) / RATE[unit.type]) * 60);
 
-// wallet + what is left of the current session
+
 export const balanceOf = user => {
   const unit = myUnit(user);
   return user.balance + (unit ? sessionValue(unit) : 0);
 };
 
-// ---------- auth ----------
-export const login = (username, password, unitId = null) => {
+// auth
+export const login = (username, password) => {
   const user = state.users.find(u => u.username === username.trim() && u.password === password);
   if (!user) throw new Error('Wrong username or password.');
-  if (unitId) beginSession(user, findUnit(unitId)); // logging in on a shop PC takes that unit
   setCurrent(user.id);
   persist();
 };
@@ -79,44 +71,47 @@ export const register = (username, password) => {
   persist();
 };
 
-export const logout = unitId => {
-  const unit = findUnit(unitId);
-  if (unit && unit.player === currentUser()?.username) freeUnit(unit); // quitting on the shop PC frees it
+export const logout = () => {
   setCurrent(null);
   persist();
 };
 
-// ---------- units + waiting list ----------
+//Units//
 export const unitsInfo = () => {
   const user = currentUser();
   return state.units.map(u => {
     const busy = Boolean(u.player);
-    const queue = state.waitlist.filter(w => w.unitId === u.id).map(w => w.username);
     return {
-      id: u.id, name: u.name, type: u.type, rate: RATE[u.type], player: u.player, queue,
+      id: u.id, name: u.name, type: u.type, rate: RATE[u.type], player: u.player,
       state: u.broken ? 'broken' : busy ? 'busy' : 'free',
       played: busy ? minutesPlayed(u) : 0,
       left: busy ? minutesLeft(u) : 0,
       balance: busy ? sessionValue(u) : 0,
       mine: u.player === user.username,
-      canJoin: busy && u.player !== user.username && !queue.includes(user.username),
-      inQueue: queue.includes(user.username),
+      canStart: user.role !== 'admin' && !busy && !u.broken && !myUnit(user),
+      canEnd: u.player === user.username,
       canToggle: user.role === 'admin' && !busy,
     };
   });
 };
 
-// Called when a player logs in on a shop PC: the unit becomes theirs automatically.
-const beginSession = (user, unit) => {
-  if (!unit) throw new Error('Unknown unit.');
-  if (unit.player === user.username) return; // already playing here
-  if (unit.broken) throw new Error('That unit is out of service.');
-  if (unit.player) throw new Error('That unit is already in use.');
-  if (myUnit(user)) throw new Error('You already have a unit.');
+
+export const startSession = unitId => {
+  const user = requireUser();
+  const unit = findUnit(unitId);
   if (user.balance <= 0) throw new Error('No balance yet. Top up first.');
   Object.assign(unit, { player: user.username, startedAt: Date.now(), paid: user.balance });
   user.balance = 0;
-  state.waitlist = state.waitlist.filter(w => w.username !== user.username);
+  persist();
+};
+
+
+export const endSession = unitId => {
+  const user = requireUser();
+  const unit = findUnit(unitId);
+  if (!unit || unit.player !== user.username) throw new Error('This is not your unit.');
+  freeUnit(unit);
+  persist();
 };
 
 const freeUnit = unit => {
@@ -140,23 +135,7 @@ export const toggleBroken = unitId => {
   persist();
 };
 
-export const joinWaitlist = unitId => {
-  const user = requireUser();
-  const unit = findUnit(unitId);
-  if (!unit.player) throw new Error('That unit is free. Start a session instead.');
-  if (unit.player === user.username) throw new Error('You are already playing on this unit.');
-  if (state.waitlist.some(w => w.unitId === unitId && w.username === user.username)) throw new Error('You are already on this waiting list.');
-  state.waitlist.push({ id: newId(), unitId, username: user.username });
-  persist();
-};
-
-export const leaveWaitlist = unitId => {
-  const user = requireUser();
-  state.waitlist = state.waitlist.filter(w => !(w.unitId === unitId && w.username === user.username));
-  persist();
-};
-
-// ---------- top-up ----------
+//TU//
 export const previewMinutes = amount => {
   const unit = myUnit(requireUser());
   return Math.floor((amount / RATE[unit?.type ?? 'regular']) * 60) || 0;
@@ -168,7 +147,7 @@ export const checkPayment = (amount, method) => {
   if (!['GCash', 'Maya', 'Counter'].includes(method)) throw new Error('Choose a payment method.');
 };
 
-// Time is credited now. GCash/Maya count as paid; Pay to Counter stays unpaid until the counter marks it paid.
+
 export const topUp = (amount, method) => {
   const user = requireUser();
   checkPayment(amount, method);
@@ -196,7 +175,38 @@ export const unpaidTotal = () => {
   return user ? state.pending.filter(p => p.username === user.username).reduce((sum, p) => sum + p.amount, 0) : 0;
 };
 
-// ---------- announcements ----------
+export const productInfo = () => PRODUCTS.map(product => ({ ...product }));
+
+//O//
+export const orderProduct = productId => {
+  const user = requireUser();
+  const product = PRODUCTS.find(p => p.id === productId);
+  if (!product) throw new Error('Product not found.');
+  if (user.role === 'admin') throw new Error('Admins cannot place orders.');
+  if (balanceOf(user) < product.price) throw new Error('Not enough balance. Top up first.');
+  const fromWallet = Math.min(user.balance, product.price);
+  user.balance -= fromWallet;
+  if (product.price > fromWallet) myUnit(user).paid -= product.price - fromWallet;
+  state.orders.push({ id: newId(), username: user.username, product: product.name, price: product.price });
+  persist();
+  return product;
+};
+
+export const ordersInfo = () => {
+  const user = currentUser();
+  const admin = user.role === 'admin';
+  return state.orders
+    .filter(o => admin || o.username === user.username)
+    .map(o => ({ ...o, canServe: admin }));
+};
+
+export const markServed = id => {
+  requireAdmin();
+  state.orders = state.orders.filter(o => o.id !== id);
+  persist();
+};
+
+// announcements//
 export const getUpdate = id => state.updates.find(u => u.id === id) ?? null;
 
 const cleanUpdate = ({ kind, title, details, date, link }) => {
