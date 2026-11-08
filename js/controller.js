@@ -1,4 +1,3 @@
-// Controller: the only file that imports both the model and the views.
 import * as model from './model.js';
 import authView from './views/AuthView.js';
 import navView from './views/NavView.js';
@@ -9,9 +8,9 @@ import updatesView from './views/UpdatesView.js';
 import modalView from './views/ModalView.js';
 
 
-let page = 'units'; // 'units' | 'products' | 'topup' | 'announce'
+let page = 'units';
 let editingId = null;
-let draft = null; // top-up waiting for the Confirm button
+let draft = null;
 
 const renderBoard = user => {
   navView.render({ user, balance: model.balanceOf(user), page });
@@ -34,7 +33,7 @@ const refresh = () => {
   updatesView.render({ items: model.state.updates, isAdmin: user.role === 'admin', editing: model.getUpdate(editingId) });
 };
 
-// Run a model change, re-render on success, show the error in the given view on failure.
+
 const attempt = (view, change) => {
   try {
     change();
@@ -111,7 +110,7 @@ const controlUpdateAction = (action, id) =>
     if (action === 'delete') model.deleteUpdate(id);
   });
 
-// Every 10s: refresh play time and free units whose time ran out.
+
 const tick = () => {
   const user = model.currentUser();
   if (!user) return;
@@ -119,7 +118,7 @@ const tick = () => {
   else renderBoard(user);
 };
 
-// Every 5 min: remind the player about anything unpaid at the counter.
+
 const remind = () => {
   const total = model.unpaidTotal();
   if (total > 0 && !draft) modalView.render({ title: 'Reminder', text: `You still have ₱${total} to pay at the counter.` });
