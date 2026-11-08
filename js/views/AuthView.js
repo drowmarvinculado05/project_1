@@ -13,16 +13,16 @@ class AuthView extends View {
   }
 
   _generateMarkup() {
-    const { news: items, unit } = this._data;
-    const news = items.map(u => `<article class="card">
-        <h3><span class="tag">${u.kind}</span> ${this._esc(u.title)}</h3><p>${this._esc(u.details)}</p></article>`).join('');
+    const { news: items } = this._data;
+    const news = items.map(item => `<article class="card">
+        <h3><span class="tag">${this._esc(item.kind)}</span> ${this._esc(item.title)}</h3><p>${this._esc(item.details)}</p></article>`).join('');
     return `<div class="login-page">
       <form class="login-box">
-        <h2>Login${unit ? ` (${this._esc(unit)})` : ''}</h2>
+        <h2>Login</h2>
         <input name="username" placeholder="Username">
         <input name="password" type="password" placeholder="Password">
         <p class="error"></p>
-        <button type="button" data-action="login">Enter</button>
+        <button type="button" data-action="login">Login</button>
         <button type="button" data-action="register">Create Account</button>
       </form>
       <div><h1>Welcome Player</h1>${news}</div>
