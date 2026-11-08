@@ -17,7 +17,7 @@ class NavView extends View {
     const tab = (id, label) => `<button data-page="${id}" class="${page === id ? 'active' : ''}">${label}</button>`;
     return `<span>Name: ${this._esc(user.username)}</span>
       <span>Balance: ₱${balance.toFixed(2)}</span>
-      <nav>${tab('home', 'Home')}${tab('topup', 'Top-up')}${tab('announce', 'Announcement')}${tab('quit', 'Quit')}</nav>`;
+      <nav>${tab('units', 'Units')}${tab('products', 'Products')}${tab('topup', 'Top-up')}${tab('announce', 'Announcement')}${tab('logout', 'Logout')}</nav>`;
   }
 }
 
