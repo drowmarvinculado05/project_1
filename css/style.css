@@ -1,31 +1,336 @@
-:root { --bg:#12151c; --panel:#1b2030; --line:#2c3550; --text:#e8ecf5; --free:#3ddc97; --busy:#ff6b6b; --vip:#ffc857; --off:#7b8498; }
-* { box-sizing: border-box; }
-[hidden] { display: none !important; }
-body { margin:0; font-family:"Segoe UI",system-ui,sans-serif; background:var(--bg); color:var(--text); }
-h1, h2, h3 { margin:0 0 .6rem; }
-.nav { display:flex; flex-wrap:wrap; gap:1rem; align-items:center; padding:.8rem 1.5rem; border-bottom:1px solid var(--line); }
-.nav span:nth-child(2) { margin-right:auto; }
-.nav nav { display:flex; gap:.4rem; }
-.nav nav button { background:none; color:var(--text); border:1px solid transparent; border-radius:999px; text-decoration:underline; margin:0; }
-.nav nav button.active { border-color:var(--vip); color:var(--vip); }
-main { max-width:1000px; margin:auto; padding:1.5rem; }
-section, .login-box { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:1rem; }
-.login-page { display:grid; grid-template-columns:minmax(260px,340px) 1fr; gap:2rem; max-width:900px; margin:3rem auto; padding:0 1rem; }
-.login-box { display:grid; gap:.6rem; align-content:start; }
-.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:.75rem; }
-.card { border:1px solid var(--line); border-left:4px solid var(--free); border-radius:6px; padding:.75rem; margin-bottom:.5rem; }
-.grid .card { margin:0; min-height:150px; }
-.card.busy { border-left-color:var(--busy); }
-.card.broken { border-left-color:var(--off); color:var(--off); }
-.announce { display:grid; grid-template-columns:1fr 150px; gap:1rem; }
-.poster { display:grid; place-items:center; min-height:100px; border:1px dashed var(--line); border-radius:6px; color:var(--vip); }
-.vip { background:var(--vip); color:#000; font-size:.75rem; padding:.1rem .4rem; border-radius:4px; }
-.tag { color:var(--vip); }
-form { display:grid; gap:.5rem; margin-bottom:1rem; }
-input, select, textarea, button { font:inherit; padding:.45rem .6rem; border-radius:6px; border:1px solid var(--line); background:var(--bg); color:var(--text); }
-button { background:var(--free); color:#000; border:0; cursor:pointer; margin:.25rem .4rem 0 0; }
-button:focus-visible, input:focus-visible { outline:2px solid var(--vip); }
-.error { color:var(--busy); margin:0; min-height:1.2em; }
-.modal { position:fixed; inset:0; display:grid; place-items:center; background:#000a; }
-.modal .box { background:var(--panel); border:1px solid var(--line); border-radius:8px; padding:1.2rem; max-width:380px; }
-@media (max-width:640px) { .login-page, .announce { grid-template-columns:1fr; } }
+:root {
+    --bg: #12142a;
+    --panel: #1a1d45;
+    --line: #2c3068;
+    --text: #e8ecf5;
+    --free: #22c55e;
+    --busy: #ff6b6b;
+    --vip: #ffc857;
+    --off: #7b8498;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+h1,
+h2,
+h3 {
+    margin: 0 0 .6rem;
+}
+
+/* ---------- header ---------- */
+.site-header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding: .8rem max(1.5rem, calc((100% - 1100px) / 2));
+    background: var(--panel);
+    border-bottom: 1px solid var(--line);
+}
+
+.site-header .brand {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.site-header .brand b {
+    color: #5b6192;
+}
+
+.site-header .tagline {
+    font-size: .85rem;
+    color: #8f95c7;
+}
+
+.nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+    justify-content: flex-end;
+    padding: .8rem max(1.5rem, calc((100% - 1100px) / 2));
+    border-bottom: 1px solid var(--line);
+    background: var(--panel);
+}
+
+/* hide the login header once logged in */
+body:has(.nav:not([hidden])) .site-header {
+    display: none;
+}
+
+/* brand on the left of the logged-in nav */
+.nav::before {
+    content: "NetZone";
+    margin-right: auto;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.nav nav {
+    display: flex;
+    gap: .4rem;
+}
+
+.nav nav button {
+    background: none;
+    color: #8f95c7;
+    border: 0;
+    border-radius: 6px;
+    padding: .5rem .9rem;
+    margin: 0;
+}
+
+.nav nav button.active {
+    background: var(--free);
+    color: #0b1a10;
+    font-weight: 600;
+}
+
+/* ---------- layout ---------- */
+main {
+    max-width: 1200px;
+    margin: auto;
+    padding: 1.5rem;
+}
+
+section,
+.login-box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+/* Units: no big panel, cards sit directly on the page */
+.units {
+    background: none;
+    border: 0;
+    padding: 0;
+}
+
+.login-page {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: 440px;
+    margin: 3rem auto;
+    padding: 0 1rem;
+}
+
+.login-page h1 {
+    text-align: center;
+}
+
+.login-box {
+    display: grid;
+    gap: .6rem;
+    align-content: start;
+}
+
+/* ---------- unit cards ---------- */
+.group-title {
+    margin: 2rem 0 .8rem;
+}
+
+.group-title:first-of-type {
+    margin-top: 0;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-auto-rows: 260px;
+    gap: 1.1rem;
+}
+
+.card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.1rem;
+    margin-bottom: .5rem;
+}
+
+.grid .card {
+    margin: 0;
+    height: 100%;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: .35rem;
+    overflow-wrap: anywhere;
+}
+
+.card h3 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .4rem;
+    margin: 0;
+    min-height: 1.6em;
+}
+
+.card.free {
+    background: color-mix(in srgb, var(--free) 35%, var(--panel));
+    border-color: var(--free);
+}
+
+.card.busy {
+    background: color-mix(in srgb, var(--busy) 35%, var(--panel));
+    border-color: var(--busy);
+}
+
+.card.broken {
+    color: var(--off);
+    background: color-mix(in srgb, var(--off) 25%, var(--panel));
+    border-color: var(--off);
+}
+
+/* Products: equal-size cards, Order button pinned to the bottom */
+.products .grid {
+    grid-auto-rows: 150px;
+    margin-bottom: 1.5rem;
+}
+
+.products .card p {
+    margin: 0;
+}
+
+/* ---------- announcements ---------- */
+.announce {
+    display: grid;
+    grid-template-columns: 1fr 150px;
+    gap: 1rem;
+}
+
+.poster {
+    display: grid;
+    place-items: center;
+    min-height: 100px;
+    border: 1px dashed var(--line);
+    border-radius: 6px;
+    color: var(--vip);
+}
+
+/* VIP badge next to the unit name (do not put this class on the card) */
+.vip {
+    background: var(--vip);
+    color: #000;
+    font-size: .75rem;
+    padding: .1rem .4rem;
+    border-radius: 4px;
+}
+
+.tag {
+    color: var(--vip);
+}
+
+/* ---------- forms ---------- */
+form {
+    display: grid;
+    gap: .5rem;
+    margin-bottom: 1rem;
+}
+
+input,
+select,
+textarea,
+button {
+    font: inherit;
+    padding: .45rem .6rem;
+    border-radius: 6px;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--text);
+}
+
+button {
+    background: var(--free);
+    color: #000;
+    border: 0;
+    cursor: pointer;
+    margin: .25rem .4rem 0 0;
+}
+
+button:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--vip);
+}
+
+/* Every card button sits full width at the bottom of the card */
+.grid .card button {
+    width: 100%;
+    margin: auto 0 0;
+    padding: .55rem;
+}
+
+/* In / Out buttons: black with white text */
+.grid .card button[data-action="in"],
+.grid .card button[data-action="out"] {
+    background: #000;
+    color: #fff;
+}
+
+.error {
+    color: var(--busy);
+    margin: 0;
+    min-height: 1.2em;
+}
+
+/* ---------- modal ---------- */
+.modal {
+    position: fixed;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: #000a;
+}
+
+.modal .box {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 1.2rem;
+    max-width: 380px;
+}
+
+/* ---------- responsive ---------- */
+@media (max-width: 1100px) {
+    .grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+
+    .login-page,
+    .announce {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 500px) {
+    .grid {
+        grid-template-columns: 1fr;
+    }
+}
