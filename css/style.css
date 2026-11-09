@@ -372,3 +372,422 @@ input:focus-visible {
         padding: .5rem .8rem;
     }
 }
+
+/* ---------- hover effects ---------- */
+.card,
+button,
+.nav nav button {
+    transition: transform .15s ease, box-shadow .15s ease, filter .15s ease, background .15s ease;
+}
+
+@media (hover: hover) {
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 18px #0008;
+    }
+
+    button:hover {
+        filter: brightness(1.15);
+    }
+
+    .grid .card button[data-action="in"]:hover,
+    .grid .card button[data-action="out"]:hover {
+        background: #222;
+        filter: none;
+    }
+
+    .nav nav button:not(.active):hover {
+        background: var(--line);
+        color: #fff;
+    }
+
+    a:hover {
+        color: var(--vip);
+    }
+}
+
+button:active {
+    transform: scale(.97);
+}
+
+/* room above the grid so lifted cards are not clipped */
+.grid {
+    padding-top: 6px;
+}
+
+/* respect people who turn animations off */
+@media (prefers-reduced-motion: reduce) {
+
+    .card,
+    button,
+    .nav nav button {
+        transition: none;
+    }
+
+    .card:hover {
+        transform: none;
+    }
+}
+
+/* ---------- login page design ---------- */
+
+/* grid + glow background on every page */
+body {
+    min-height: 100vh;
+    background:
+        radial-gradient(circle at 20% 10%, #2b2f8f55, transparent 45%),
+        radial-gradient(circle at 80% 90%, #22c55e22, transparent 40%),
+        linear-gradient(#ffffff08 1px, transparent 1px) 0 0 / 40px 40px,
+        linear-gradient(90deg, #ffffff08 1px, transparent 1px) 0 0 / 40px 40px,
+        var(--bg);
+    background-attachment: fixed;
+}
+
+/* glowing login box */
+.auth .login-box {
+    border-color: var(--free);
+    box-shadow: 0 0 0 1px #22c55e33, 0 0 30px #22c55e33;
+}
+
+.auth .login-box h2 {
+    font-size: 1.6rem;
+}
+
+/* glowing welcome title */
+.login-page h1 {
+    font-size: 2rem;
+    text-shadow: 0 0 18px #22c55e88;
+}
+
+/* logo: "Zone" glows green */
+.site-header .brand b {
+    color: var(--free);
+    text-shadow: 0 0 12px #22c55e88;
+}
+
+/* inputs glow when selected */
+.login-box input:focus {
+    outline: none;
+    border-color: var(--free);
+    box-shadow: 0 0 0 3px #22c55e33;
+}
+
+/* Create Account: outlined button */
+.login-box button[data-action="register"] {
+    background: transparent;
+    color: var(--free);
+    border: 1px solid var(--free);
+}
+
+.login-box button[data-action="register"]:hover {
+    background: #22c55e22;
+}
+
+/* ---------- unit card design ---------- */
+.grid .card {
+    position: relative;
+}
+
+/* status pill, top-right */
+.grid .card::before {
+    position: absolute;
+    top: .8rem;
+    right: .8rem;
+    padding: .1rem .5rem;
+    border-radius: 999px;
+    font-size: .7rem;
+    font-weight: 600;
+}
+
+.grid .card.free::before {
+    content: "Free";
+    background: #22c55e33;
+    color: var(--free);
+}
+
+.grid .card.busy::before {
+    content: "In use";
+    background: #ff6b6b33;
+    color: var(--busy);
+}
+
+.grid .card.broken::before {
+    content: "Damaged";
+    background: #7b849833;
+    color: var(--off);
+}
+
+/* faint monitor icon in the empty space of free cards */
+.grid .card.free::after {
+    content: "🖥️";
+    position: absolute;
+    top: 48%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2.6rem;
+    opacity: .2;
+    pointer-events: none;
+}
+
+/* VIP units: gold border and glow */
+.grid .card.type-vip.free {
+    border-color: var(--vip);
+    box-shadow: 0 0 14px #ffc85744;
+}
+
+.grid .card.type-vip.busy {
+    border-color: var(--vip);
+}
+
+/* pulsing dot on busy PCs */
+.grid .card.busy h3::after {
+    content: "";
+    width: .55rem;
+    height: .55rem;
+    border-radius: 50%;
+    background: var(--busy);
+    animation: pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: .35;
+        transform: scale(.7);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .grid .card.busy h3::after {
+        animation: none;
+    }
+}
+
+/* ---------- top-up page design ---------- */
+.topup {
+    max-width: 640px;
+    margin: 0 auto;
+    border-color: var(--free);
+    box-shadow: 0 0 0 1px #22c55e33, 0 0 30px #22c55e22;
+}
+
+.topup h2 {
+    font-size: 1.6rem;
+}
+
+/* balance: big number, like a wallet */
+.topup form>p:first-child {
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+    margin: 0 0 .4rem;
+    padding: 1rem 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: color-mix(in srgb, var(--free) 12%, var(--bg));
+    color: #8f95c7;
+    font-size: .9rem;
+}
+
+.topup form>p:first-child strong {
+    color: var(--free);
+    font-size: 2rem;
+    text-shadow: 0 0 14px #22c55e66;
+}
+
+/* amount input */
+.topup form>label {
+    display: grid;
+    gap: .4rem;
+    font-weight: 600;
+}
+
+.topup input[name="amount"] {
+    font-size: 1.4rem;
+    padding: .7rem .9rem;
+}
+
+.topup input[name="amount"]:focus {
+    outline: none;
+    border-color: var(--free);
+    box-shadow: 0 0 0 3px #22c55e33;
+}
+
+/* minutes preview as a pill */
+.topup .preview {
+    justify-self: start;
+    margin: 0;
+    padding: .3rem .8rem;
+    border-radius: 999px;
+    background: #22c55e22;
+    color: var(--free);
+    font-weight: 600;
+}
+
+/* payment methods as selectable chips */
+.topup form>div {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: .5rem;
+    color: #8f95c7;
+}
+
+.topup form>div label {
+    position: relative;
+    padding: .55rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color .15s ease, background .15s ease;
+}
+
+.topup form>div label input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.topup form>div label:has(input:checked) {
+    border-color: var(--free);
+    background: #22c55e22;
+    color: var(--free);
+    font-weight: 600;
+}
+
+.topup form>div label:has(input:focus-visible) {
+    outline: 2px solid var(--vip);
+}
+
+@media (hover: hover) {
+    .topup form>div label:hover {
+        border-color: var(--free);
+    }
+}
+
+/* pay button */
+.topup form>button {
+    width: 100%;
+    margin: .3rem 0 0;
+    padding: .8rem;
+    font-size: 1.05rem;
+    font-weight: 700;
+}
+
+/* unpaid list as rows */
+.topup ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: .5rem;
+}
+
+.topup li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .8rem;
+    padding: .7rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg);
+}
+
+.topup li button {
+    margin: 0;
+    padding: .4rem .8rem;
+}
+
+/* ---------- products page design ---------- */
+.products {
+    border-color: var(--free);
+    box-shadow: 0 0 0 1px #22c55e33, 0 0 30px #22c55e22;
+}
+
+.products h2 {
+    font-size: 1.6rem;
+}
+
+/* product cards */
+.products .grid .card {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(160deg, color-mix(in srgb, var(--free) 10%, var(--bg)), var(--bg) 70%);
+    border-color: var(--line);
+}
+
+/* green accent bar on the left edge */
+.products .grid .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    padding: 0;
+    border-radius: 0;
+    background: var(--free);
+    box-shadow: 0 0 12px #22c55e88;
+}
+
+.products .grid .card {
+    padding-left: 1.5rem;
+}
+
+.products .card h3 {
+    font-size: 1.1rem;
+}
+
+/* price: big green number pinned above the button */
+.products .card p {
+    margin-top: auto;
+    color: var(--free);
+    font-size: 1.6rem;
+    font-weight: 700;
+    text-shadow: 0 0 12px #22c55e55;
+}
+
+.products .grid .card button {
+    margin: .6rem 0 0;
+}
+
+@media (hover: hover) {
+    .products .grid .card:hover {
+        border-color: var(--free);
+        box-shadow: 0 8px 18px #0008, 0 0 16px #22c55e44;
+    }
+}
+
+/* orders list as rows */
+.products ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: .5rem;
+}
+
+.products li {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .8rem;
+    padding: .7rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--bg);
+}
+
+.products li button {
+    margin: 0;
+    padding: .4rem .8rem;
+}
