@@ -30,7 +30,6 @@ h3 {
     margin: 0 0 .6rem;
 }
 
-/* ---------- header ---------- */
 .site-header {
     display: flex;
     align-items: baseline;
@@ -66,12 +65,10 @@ h3 {
     background: var(--panel);
 }
 
-/* hide the login header once logged in */
 body:has(.nav:not([hidden])) .site-header {
     display: none;
 }
 
-/* brand on the left of the logged-in nav */
 .nav::before {
     content: "NetZone";
     margin-right: auto;
@@ -100,7 +97,6 @@ body:has(.nav:not([hidden])) .site-header {
     font-weight: 600;
 }
 
-/* ---------- layout ---------- */
 main {
     max-width: 1200px;
     margin: auto;
@@ -115,7 +111,6 @@ section,
     padding: 1rem;
 }
 
-/* Units: no big panel, cards sit directly on the page */
 .units {
     background: none;
     border: 0;
@@ -141,7 +136,6 @@ section,
     align-content: start;
 }
 
-/* ---------- unit cards ---------- */
 .group-title {
     margin: 2rem 0 .8rem;
 }
@@ -200,7 +194,6 @@ section,
     border-color: var(--off);
 }
 
-/* Products: equal-size cards, Order button pinned to the bottom */
 .products .grid {
     grid-auto-rows: 150px;
     margin-bottom: 1.5rem;
@@ -210,7 +203,6 @@ section,
     margin: 0;
 }
 
-/* ---------- announcements ---------- */
 .announce {
     display: grid;
     grid-template-columns: 1fr 150px;
@@ -226,7 +218,6 @@ section,
     color: var(--vip);
 }
 
-/* VIP badge next to the unit name (do not put this class on the card) */
 .vip {
     background: var(--vip);
     color: #000;
@@ -239,7 +230,6 @@ section,
     color: var(--vip);
 }
 
-/* ---------- forms ---------- */
 form {
     display: grid;
     gap: .5rem;
@@ -271,14 +261,12 @@ input:focus-visible {
     outline: 2px solid var(--vip);
 }
 
-/* Every card button sits full width at the bottom of the card */
 .grid .card button {
     width: 100%;
     margin: auto 0 0;
     padding: .55rem;
 }
 
-/* In / Out buttons: black with white text */
 .grid .card button[data-action="in"],
 .grid .card button[data-action="out"] {
     background: #000;
@@ -291,7 +279,6 @@ input:focus-visible {
     min-height: 1.2em;
 }
 
-/* ---------- modal ---------- */
 .modal {
     position: fixed;
     inset: 0;
@@ -308,7 +295,7 @@ input:focus-visible {
     max-width: 380px;
 }
 
-/* ---------- responsive ---------- */
+
 @media (max-width: 1100px) {
     .grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -335,7 +322,6 @@ input:focus-visible {
     }
 }
 
-/* ---------- mobile nav fix ---------- */
 @media (max-width: 700px) {
     .nav {
         flex-direction: row;
@@ -356,7 +342,7 @@ input:focus-visible {
         white-space: nowrap;
     }
 
-    /* tabs get their own full-width row and scroll sideways */
+
     .nav nav {
         flex: 1 1 100%;
         min-width: 0;
@@ -373,7 +359,7 @@ input:focus-visible {
     }
 }
 
-/* ---------- hover effects ---------- */
+
 .card,
 button,
 .nav nav button {
@@ -410,12 +396,12 @@ button:active {
     transform: scale(.97);
 }
 
-/* room above the grid so lifted cards are not clipped */
+
 .grid {
     padding-top: 6px;
 }
 
-/* respect people who turn animations off */
+
 @media (prefers-reduced-motion: reduce) {
 
     .card,
@@ -429,9 +415,7 @@ button:active {
     }
 }
 
-/* ---------- login page design ---------- */
 
-/* grid + glow background on every page */
 body {
     min-height: 100vh;
     background:
@@ -443,7 +427,6 @@ body {
     background-attachment: fixed;
 }
 
-/* glowing login box */
 .auth .login-box {
     border-color: var(--free);
     box-shadow: 0 0 0 1px #22c55e33, 0 0 30px #22c55e33;
@@ -453,26 +436,22 @@ body {
     font-size: 1.6rem;
 }
 
-/* glowing welcome title */
 .login-page h1 {
     font-size: 2rem;
     text-shadow: 0 0 18px #22c55e88;
 }
 
-/* logo: "Zone" glows green */
 .site-header .brand b {
     color: var(--free);
     text-shadow: 0 0 12px #22c55e88;
 }
 
-/* inputs glow when selected */
 .login-box input:focus {
     outline: none;
     border-color: var(--free);
     box-shadow: 0 0 0 3px #22c55e33;
 }
 
-/* Create Account: outlined button */
 .login-box button[data-action="register"] {
     background: transparent;
     color: var(--free);
@@ -483,12 +462,11 @@ body {
     background: #22c55e22;
 }
 
-/* ---------- unit card design ---------- */
 .grid .card {
     position: relative;
 }
 
-/* status pill, top-right */
+
 .grid .card::before {
     position: absolute;
     top: .8rem;
@@ -517,7 +495,6 @@ body {
     color: var(--off);
 }
 
-/* faint monitor icon in the empty space of free cards */
 .grid .card.free::after {
     content: "🖥️";
     position: absolute;
@@ -529,7 +506,7 @@ body {
     pointer-events: none;
 }
 
-/* VIP units: gold border and glow */
+
 .grid .card.type-vip.free {
     border-color: var(--vip);
     box-shadow: 0 0 14px #ffc85744;
@@ -539,7 +516,7 @@ body {
     border-color: var(--vip);
 }
 
-/* pulsing dot on busy PCs */
+
 .grid .card.busy h3::after {
     content: "";
     width: .55rem;
@@ -569,7 +546,7 @@ body {
     }
 }
 
-/* ---------- top-up page design ---------- */
+
 .topup {
     max-width: 640px;
     margin: 0 auto;
@@ -581,7 +558,7 @@ body {
     font-size: 1.6rem;
 }
 
-/* balance: big number, like a wallet */
+
 .topup form>p:first-child {
     display: flex;
     flex-direction: column;
@@ -601,7 +578,7 @@ body {
     text-shadow: 0 0 14px #22c55e66;
 }
 
-/* amount input */
+
 .topup form>label {
     display: grid;
     gap: .4rem;
@@ -619,7 +596,7 @@ body {
     box-shadow: 0 0 0 3px #22c55e33;
 }
 
-/* minutes preview as a pill */
+
 .topup .preview {
     justify-self: start;
     margin: 0;
@@ -630,7 +607,7 @@ body {
     font-weight: 600;
 }
 
-/* payment methods as selectable chips */
+
 .topup form>div {
     display: flex;
     flex-wrap: wrap;
@@ -673,7 +650,7 @@ body {
     }
 }
 
-/* pay button */
+
 .topup form>button {
     width: 100%;
     margin: .3rem 0 0;
@@ -682,7 +659,7 @@ body {
     font-weight: 700;
 }
 
-/* unpaid list as rows */
+
 .topup ul {
     list-style: none;
     margin: 0;
@@ -707,7 +684,7 @@ body {
     padding: .4rem .8rem;
 }
 
-/* ---------- products page design ---------- */
+
 .products {
     border-color: var(--free);
     box-shadow: 0 0 0 1px #22c55e33, 0 0 30px #22c55e22;
@@ -717,7 +694,7 @@ body {
     font-size: 1.6rem;
 }
 
-/* product cards */
+
 .products .grid .card {
     position: relative;
     overflow: hidden;
@@ -725,7 +702,7 @@ body {
     border-color: var(--line);
 }
 
-/* green accent bar on the left edge */
+
 .products .grid .card::before {
     content: "";
     position: absolute;
@@ -747,7 +724,7 @@ body {
     font-size: 1.1rem;
 }
 
-/* price: big green number pinned above the button */
+
 .products .card p {
     margin-top: auto;
     color: var(--free);
@@ -767,7 +744,7 @@ body {
     }
 }
 
-/* orders list as rows */
+
 .products ul {
     list-style: none;
     margin: 0;
@@ -792,7 +769,7 @@ body {
     padding: .4rem .8rem;
 }
 
-/* ---------- hide number input arrows ---------- */
+
 input[type="number"]::-webkit-outer-spin-button,
 input[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -804,7 +781,7 @@ input[type="number"] {
     appearance: textfield;
 }
 
-/* ---------- error message design ---------- */
+
 .error:not(:empty) {
     display: flex;
     align-items: center;
@@ -833,7 +810,7 @@ input[type="number"] {
     font-weight: 800;
 }
 
-/* ---------- announcement page design ---------- */
+
 .updates {
     border-color: var(--free);
     box-shadow: 0 0 0 1px #22c55e33, 0 0 30px #22c55e22;
@@ -843,7 +820,7 @@ input[type="number"] {
     font-size: 1.6rem;
 }
 
-/* announcement cards */
+
 .updates .card {
     position: relative;
     overflow: hidden;
@@ -851,7 +828,7 @@ input[type="number"] {
     background: linear-gradient(160deg, color-mix(in srgb, var(--vip) 8%, var(--bg)), var(--bg) 70%);
 }
 
-/* gold accent bar on the left edge */
+
 .updates .card::before {
     content: "";
     position: absolute;
@@ -872,7 +849,7 @@ input[type="number"] {
     margin: .4rem 0;
 }
 
-/* kind label (Event, Raffle, Tournament) as a pill */
+
 .updates .tag {
     padding: .15rem .65rem;
     border-radius: 999px;
@@ -881,18 +858,18 @@ input[type="number"] {
     font-weight: 700;
 }
 
-/* date line */
+
 .updates .card p:nth-of-type(2) {
     color: #8f95c7;
 }
 
-/* register link */
+
 .updates .card a {
     color: var(--free);
     font-weight: 600;
 }
 
-/* poster panel on the right */
+
 .updates .poster {
     border: 1px solid #ffc85755;
     background: linear-gradient(135deg, #ffc85722, #22c55e22);
@@ -901,7 +878,7 @@ input[type="number"] {
     text-shadow: 0 0 14px #ffc85788;
 }
 
-/* admin form as its own panel */
+
 .updates form {
     padding: 1rem;
     margin-bottom: 1.2rem;
@@ -923,7 +900,7 @@ input[type="number"] {
     resize: vertical;
 }
 
-/* delete button: red outline */
+
 .updates button[data-action="delete"] {
     background: transparent;
     color: var(--busy);
