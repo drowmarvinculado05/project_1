@@ -74,7 +74,7 @@ const controlPay = (amount, method) => {
       title: 'Confirm',
       text: method === 'Counter'
         ? `Add ₱${amount} to your time? Please pay ₱${amount} at the counter. We will remind you every 5 minutes until it is paid.`
-        : `Pay ₱${amount} with ${method}? (Demo only: no real payment is made.)`,
+        : `Pay ₱${amount} with ${method}? payment is made.`,
       confirm: true,
     });
   } catch (err) {
