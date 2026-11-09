@@ -791,3 +791,148 @@ body {
     margin: 0;
     padding: .4rem .8rem;
 }
+
+/* ---------- hide number input arrows ---------- */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+
+/* ---------- error message design ---------- */
+.error:not(:empty) {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .6rem .9rem;
+    border: 1px solid var(--busy);
+    border-left-width: 4px;
+    border-radius: 8px;
+    background: #ff6b6b1f;
+    color: #ffb3b3;
+    font-weight: 600;
+    font-size: .95rem;
+}
+
+.error:not(:empty)::before {
+    content: "!";
+    flex: 0 0 auto;
+    display: grid;
+    place-items: center;
+    width: 1.3rem;
+    height: 1.3rem;
+    border-radius: 50%;
+    background: var(--busy);
+    color: #1a0b0b;
+    font-size: .8rem;
+    font-weight: 800;
+}
+
+/* ---------- announcement page design ---------- */
+.updates {
+    border-color: var(--free);
+    box-shadow: 0 0 0 1px #22c55e33, 0 0 30px #22c55e22;
+}
+
+.updates h2 {
+    font-size: 1.6rem;
+}
+
+/* announcement cards */
+.updates .card {
+    position: relative;
+    overflow: hidden;
+    padding-left: 1.6rem;
+    background: linear-gradient(160deg, color-mix(in srgb, var(--vip) 8%, var(--bg)), var(--bg) 70%);
+}
+
+/* gold accent bar on the left edge */
+.updates .card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--vip);
+    box-shadow: 0 0 12px #ffc85788;
+}
+
+.updates .card h3 {
+    margin-bottom: .5rem;
+    font-size: 1.2rem;
+}
+
+.updates .card p {
+    margin: .4rem 0;
+}
+
+/* kind label (Event, Raffle, Tournament) as a pill */
+.updates .tag {
+    padding: .15rem .65rem;
+    border-radius: 999px;
+    background: #ffc85722;
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+/* date line */
+.updates .card p:nth-of-type(2) {
+    color: #8f95c7;
+}
+
+/* register link */
+.updates .card a {
+    color: var(--free);
+    font-weight: 600;
+}
+
+/* poster panel on the right */
+.updates .poster {
+    border: 1px solid #ffc85755;
+    background: linear-gradient(135deg, #ffc85722, #22c55e22);
+    font-size: 1.3rem;
+    font-weight: 700;
+    text-shadow: 0 0 14px #ffc85788;
+}
+
+/* admin form as its own panel */
+.updates form {
+    padding: 1rem;
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--bg);
+}
+
+.updates form input:focus,
+.updates form select:focus,
+.updates form textarea:focus {
+    outline: none;
+    border-color: var(--free);
+    box-shadow: 0 0 0 3px #22c55e33;
+}
+
+.updates textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+/* delete button: red outline */
+.updates button[data-action="delete"] {
+    background: transparent;
+    color: var(--busy);
+    border: 1px solid var(--busy);
+}
+
+@media (hover: hover) {
+    .updates button[data-action="delete"]:hover {
+        background: #ff6b6b22;
+        filter: none;
+    }
+}
